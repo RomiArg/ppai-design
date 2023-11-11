@@ -1,17 +1,32 @@
 package dsi.entrega3.models;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "Cliente")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Cliente {
     /* Atributos de la clase Cliente */
-    private String nombreCompleto;
+    @Id
+    @Column(name = "dni")
+    @GeneratedValue(generator = "Cliente")
+    @TableGenerator(name = "Cliente", table = "sqlite_sequence",
+            pkColumnName = "name", pkColumnValue = "Cliente", valueColumnName = "seq",
+            initialValue = 1, allocationSize = 1)
     private int dni;
-    private int nroCelular;
+
+    @Column(name = "nombre")
+    private String nombreCompleto;
+
+    @Column(name = "nrocelular")
+    private String nroCelular;
 
     /* Este método convierte a los atributos en string para mostrarlos */
     public String MostrarDatos()

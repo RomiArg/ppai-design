@@ -1,18 +1,33 @@
 package dsi.entrega3.models;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+
+@Entity
+@Table(name = "Encuesta")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Encuesta {
+
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(generator = "Encuesta")
+    @TableGenerator(name = "Encuesta", table = "sqlite_sequence",
+            pkColumnName = "name", pkColumnValue = "Encuesta", valueColumnName = "seq",
+            initialValue = 1, allocationSize = 1)
+    private Long id;
+
     private String descripcion;
     private LocalDateTime fechaFinVigencia;
-    private ArrayList<Pregunta> preguntas;
+
+    @OneToMany(mappedBy = "encuesta", fetch = FetchType.LAZY)
+    public ArrayList<Pregunta> preguntas;
 
     // Este método convierte a los atributos en string para mostrarlos
     public String mostrarDatos()

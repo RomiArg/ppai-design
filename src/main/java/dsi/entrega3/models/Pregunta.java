@@ -1,5 +1,6 @@
 package dsi.entrega3.models;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,17 +8,30 @@ import lombok.NoArgsConstructor;
 import javax.lang.model.type.ArrayType;
 import java.util.ArrayList;
 import java.util.List;
+
+@Entity
+@Table(name = "Pregunta")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Pregunta {
     /* Atributos de la clase Pregunta */
-    private String pregunta;
-    private ArrayList<RespuestaPosible> respuestaPosibles;
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(generator = "Pregunta")
+    @TableGenerator(name = "Pregunta", table = "sqlite_sequence",
+            pkColumnName = "name", pkColumnValue = "Pregunta", valueColumnName = "seq",
+            initialValue = 1, allocationSize = 1)
+    private Long id;
 
-    public List<RespuestaPosible> getRespuestaPosibles() {
-        return respuestaPosibles;
-    }
+    private String pregunta;
+
+    @ManyToOne
+    @JoinColumn(name = "id_encuesta", nullable = false)
+    private Encuesta encuesta;
+
+    @OneToMany(mappedBy = "pregunta", fetch = FetchType.LAZY)
+    private ArrayList<RespuestaPosible> respuestaPosibles;
 
     public void setRespuestaPosibles(ArrayList<RespuestaPosible> respuestaPosibles) {
         this.respuestaPosibles = respuestaPosibles;

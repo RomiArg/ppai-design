@@ -11,14 +11,31 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Collection;
 
+@Entity
+@Table(name = "CambioEstado")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class CambioEstado {
     /* Atributos de la clase CambioEstado */
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(generator = "CambioEstado")
+    @TableGenerator(name = "CambioEstado", table = "sqlite_sequence",
+            pkColumnName = "name", pkColumnValue = "CambioEstado", valueColumnName = "seq",
+            initialValue = 1, allocationSize = 1)
+    private Long id;
 
+    @Column(name = "fechaHoraInicio")
     private LocalDateTime fechaHoraInicio;
+
+    @OneToOne
+    @JoinColumn(name = "id_estado", nullable = false)
     private Estado estado;
+
+    @ManyToOne
+    @JoinColumn(name = "id_llamada", nullable = false)
+    private Llamada llamada;
 
     /* Este método convierte a los atributos en string para mostrarlos */
     public String mostrarDatos()

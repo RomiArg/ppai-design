@@ -1,5 +1,6 @@
 package dsi.entrega3.models;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,20 +8,38 @@ import lombok.NoArgsConstructor;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+
+@Entity
+@Table(name = "Llamada")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Llamada {
-
     // Atributos de la clase Llamada
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(generator = "Llamada")
+    @TableGenerator(name = "Llamada", table = "sqlite_sequence",
+            pkColumnName = "name", pkColumnValue = "Llamada", valueColumnName = "seq",
+            initialValue = 1, allocationSize = 1)
+    private Long id;
+
     private String descripcionOperador;
     private String detalleAccionRequerida;
     private float duracion;
-    private boolean encuestaEnviada;
+    private int encuestaEnviada;
     private String observacionAuditor;
-    private ArrayList<RespuestaDeCliente> respuestasDeEncuesta;
+
+    @OneToOne
+    @JoinColumn(name = "dni_cliente", nullable = false)
     private Cliente cliente;
+
+    @OneToMany(mappedBy = "llamada", fetch = FetchType.LAZY)
+    private ArrayList<RespuestaDeCliente> respuestasDeEncuesta;
+
+    @OneToMany(mappedBy = "llamada", fetch = FetchType.LAZY)
     private ArrayList<CambioEstado> cambiosEstado;
+
     // Este método convierte a los atributos en string para mostrarlos
     public String mostrarDatos()
     {
