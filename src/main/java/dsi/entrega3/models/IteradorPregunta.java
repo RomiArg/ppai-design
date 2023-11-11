@@ -4,34 +4,37 @@ import dsi.entrega3.models.interfaces.Iterador;
 
 import java.util.List;
 
-public class IteradorPregunta implements Iterador {
+public class IteradorPregunta implements Iterador<Pregunta> {
 
-    private int actual;
-    private List<Object> elementos;
+    private int posicionActual;
+    private List<Pregunta> preguntas;
 
 
-    public IteradorPregunta(List<Object> elementos) {
-        this.elementos = elementos;
+    public IteradorPregunta(List<Pregunta> elementos) {
+        this.preguntas = elementos;
     }
 
     @Override
     public void primero() {
-
+        posicionActual = 0;
     }
 
     @Override
     public void siguiente() {
-
+       posicionActual ++;
     }
 
     @Override
-    public Object actual() {
+    public Pregunta actual() {
         return null;
     }
 
     @Override
     public boolean haTerminado() {
-        return false;
+        if (preguntas.get(posicionActual) != null){
+            return true;
+        }
+        else {return false; }
     }
 
     @Override
