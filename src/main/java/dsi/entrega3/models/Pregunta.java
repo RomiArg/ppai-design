@@ -33,10 +33,6 @@ public class Pregunta {
     @OneToMany(mappedBy = "pregunta", fetch = FetchType.LAZY)
     private ArrayList<RespuestaPosible> respuestaPosibles;
 
-    public void setRespuestaPosibles(ArrayList<RespuestaPosible> respuestaPosibles) {
-        this.respuestaPosibles = respuestaPosibles;
-    }
-
     /* Este método convierte a los atributos en string para mostrarlos */
     public String mostrarDatos()
     {

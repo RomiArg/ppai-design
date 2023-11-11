@@ -39,9 +39,6 @@ public class RespuestaPosible {
     }
 
     /* Método que se utiliza en la implementación del CU */
-    public String getDescripcionRta()
-    {
-        return descripcion;
-    }
+    public String getDescripcionRta() { return descripcion; }
 
 }
