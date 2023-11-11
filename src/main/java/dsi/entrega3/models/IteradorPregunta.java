@@ -9,6 +9,7 @@ public class IteradorPregunta implements Iterador {
     private int actual;
     private List<Object> elementos;
 
+
     public IteradorPregunta(List<Object> elementos) {
         this.elementos = elementos;
     }

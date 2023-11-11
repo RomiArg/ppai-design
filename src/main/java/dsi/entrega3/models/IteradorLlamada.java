@@ -8,10 +8,12 @@ public class IteradorLlamada implements Iterador {
 
     private int actual;
     private List<Object> elementos;
+    List<Object> filtros;
 
-    public IteradorLlamada(List<Object> elementos) {
+    public IteradorLlamada(List<Object> elementos, List<Object> filtros) {
 
         this.elementos = elementos;
+        this.filtros = filtros;
     }
 
     @Override

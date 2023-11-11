@@ -1,5 +1,6 @@
 package dsi.entrega3.models;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,7 @@ import java.util.Collection;
 @AllArgsConstructor
 public class CambioEstado {
     /* Atributos de la clase CambioEstado */
+
     private LocalDateTime fechaHoraInicio;
     private Estado estado;
 

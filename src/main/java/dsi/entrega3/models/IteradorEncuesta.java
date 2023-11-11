@@ -15,12 +15,14 @@ public class IteradorEncuesta implements Iterador {
 
     @Override
     public void primero() {
-
+        elementos.get(0);
+        actual += 1;
     }
 
     @Override
     public void siguiente() {
-
+        elementos.get(actual);
+        actual += 1;
     }
 
     @Override
