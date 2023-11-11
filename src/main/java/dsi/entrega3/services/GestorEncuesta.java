@@ -1,11 +1,14 @@
 package dsi.entrega3.services;
 
 import dsi.entrega3.models.*;
+import dsi.entrega3.models.interfaces.IAgregado;
+import dsi.entrega3.models.interfaces.Iterador;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
-public class GestorEncuesta {
+public class GestorEncuesta implements IAgregado {
 
     // Atributos de la clase GestorEncuesta
 
@@ -174,5 +177,10 @@ public class GestorEncuesta {
             }
         }
         return encuestaArmada;
+    }
+
+    @Override
+    public Iterador crearIterador(List<Object> elementos) {
+        return null;
     }
 }
