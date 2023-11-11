@@ -4,21 +4,19 @@ import dsi.entrega3.models.interfaces.Iterador;
 
 import java.util.List;
 
-public class IteradorLlamada implements Iterador {
+public class IteradorLlamada<Llamada> implements Iterador<Llamada> {
 
-    private int actual;
-    private List<Object> elementos;
+    private int posicionActual;
+    private List<Object> llamadas;
     List<Object> filtros;
 
-    public IteradorLlamada(List<Object> elementos, List<Object> filtros) {
-
-        this.elementos = elementos;
-        this.filtros = filtros;
+    public IteradorLlamada(List<Object> elementos) {
+        this.llamadas = elementos;
     }
 
     @Override
     public void primero() {
-
+        posicionActual = 0;
     }
 
     @Override
@@ -27,13 +25,16 @@ public class IteradorLlamada implements Iterador {
     }
 
     @Override
-    public Object actual() {
+    public Llamada actual() {
         return null;
     }
 
     @Override
     public boolean haTerminado() {
-        return false;
+        if (llamadas.get(posicionActual) != null){
+            return true;
+        }
+        else {return false; }
     }
 
     @Override

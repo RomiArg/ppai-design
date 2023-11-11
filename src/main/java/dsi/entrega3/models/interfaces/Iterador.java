@@ -1,12 +1,11 @@
 package dsi.entrega3.models.interfaces;
 
-import java.util.Iterator;
 import java.util.List;
 
-public interface Iterador {
+public interface Iterador<T> {
     void primero();
     void siguiente();
-    Object actual();
+    T actual();
     boolean haTerminado();
     boolean cumpleFiltro(List<Object> filtros);
 }

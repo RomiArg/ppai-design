@@ -6,6 +6,7 @@ import dsi.entrega3.models.interfaces.Iterador;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class GestorEncuesta implements IAgregado {
@@ -18,10 +19,10 @@ public class GestorEncuesta implements IAgregado {
     private float duracionLlamada;
     private ArrayList<RespuestaDeCliente> rtasCliente;
     private ArrayList<RespuestaPosible> rtasSeleccionadas;
-    private ArrayList<Pregunta> descripcionPreguntas;
+    private List<Pregunta> descripcionPreguntas;
     private Llamada llamadaSeleccionada;
-    private ArrayList<Encuesta> encuesta;
-    private ArrayList<Llamada> llamadas;
+    private List<Encuesta> encuesta;
+    private List<Llamada> llamadas;
     private String nombreLlamada;
     private String estadoActual;
     private ArrayList<String> preguntasYRespuestas;
@@ -44,7 +45,7 @@ public class GestorEncuesta implements IAgregado {
         fechaInicioPeriodo = fechaIniP;
         fechaFinPeriodo = fechaFinP;
 
-        ArrayList<Llamada> llamadasRespondidas = buscarLlamadasConEncuestaRespondida();
+        List<Llamada> llamadasRespondidas = buscarLlamadasConEncuestaRespondida();
         if (llamadasRespondidas.size() == 0)
         {
             String mensaje = "No existen llamadas con encuestas respondidas en el período indicado."
@@ -57,81 +58,57 @@ public class GestorEncuesta implements IAgregado {
         }
     }
     // Este método filtra las llamadas por su periodo y si tiene encuesta respondida y devuelve la Lista de llamadas.
-    public ArrayList<Llamada> buscarLlamadasConEncuestaRespondida()
+    public List<Llamada> buscarLlamadasConEncuestaRespondida()
     {
-        ArrayList<Llamada> llamadasFiltradas = new ArrayList<Llamada>();
-        for (Llamada llamada : this.llamadas)
+        List<Llamada> llamadasFiltradas = new ArrayList<Llamada>();
+      /*  for (Llamada llamada : this.llamadas)
         {
             if (llamada.esDePeriodo(fechaInicioPeriodo, fechaFinPeriodo) && llamada.tieneEncuestaRespondida())
             {
                 llamadasFiltradas.add(llamada);
             }
         }
+        return llamadasFiltradas;*/
+        IteradorLlamada<Llamada> iterador = (IteradorLlamada<Llamada>) crearIterador(Collections.singletonList(this.llamadas));
+        while (!iterador.haTerminado())
+        {
+            Llamada llamada = iterador.actual();
+            if (llamada.esDePeriodo(fechaInicioPeriodo, fechaFinPeriodo) && llamada.tieneEncuestaRespondida()) {
+                llamadasFiltradas.add(llamada);
+            }
+            iterador.siguiente();
+        }
         return llamadasFiltradas;
-    }
-    /*
-    // Métodos constructores de la clase
-    public GestorEncuesta(PantallaEncuesta pantallaEncuesta)
-    {
-        this.PantallaEncuesta = pantallaEncuesta;
-        Llamadas = new List<Llamada>();
-        Encuesta = new List<Encuesta>();
-        RtasCliente = new List<RespuestaDeCliente>();
-        RtasSeleccionadas = new List<RespuestaPosible>();
-        DescripcionPreguntas = new List<Pregunta>();
-    }
-
-    public GestorEncuesta(DateTime fechaInicioPeriodo, DateTime fechaFinPeriodo, string nombreCliente, int duracionLlamada, List<RespuestaDeCliente> rtasCliente, List<RespuestaPosible> rtasSeleccionadas, List<Pregunta> descripcionPreguntas, Llamada llamadaSeleccionada, PantallaEncuesta pantallaEncuesta, string nombreLlamada, string estadoActual, List<string> preguntasYRespuestas, string descripcionEncuesta)
-    {
-        this.fechaInicioPeriodo = fechaInicioPeriodo;
-        this.fechaFinPeriodo = fechaFinPeriodo;
-        this.nombreCliente = nombreCliente;
-        this.duracionLlamada = duracionLlamada;
-        this.rtasCliente = rtasCliente;
-        this.rtasSeleccionadas = rtasSeleccionadas;
-        this.descripcionPreguntas = descripcionPreguntas;
-        this.llamadaSeleccionada = llamadaSeleccionada;
-        this.encuesta = new List<Encuesta>();
-        this.pantallaEncuesta = new PantallaEncuesta(this);
-        this.llamadas = new List<Llamada>();
-        this.nombreLlamada = nombreLlamada;
-        this.estadoActual = estadoActual;
-        this.preguntasYRespuestas = preguntasYRespuestas;
-        this.descripcionEncuesta = descripcionEncuesta;
     }
 
     // Métodos que son utilizados en la implementación del CU
-
-    public void ConsultarEncuesta()
+    public void consultarEncuesta()
     {
-        PantallaEncuesta.pedirFechasFiltroPeriodo();
+        //PantallaEncuesta.pedirFechasFiltroPeriodo();
 
     }
-
-
-
 
     //Setea la variable LlamadaElegida del gestor y realiza la búsqueda de los datos de la Llamada y la Encuesta
     //y manda un mensaje a la Pantalla para que muestre los datos en la tabla
-    public void TomarSeleccionLlamada(Llamada llamadaElegida)
+    public void tomarSeleccionLlamada(Llamada llamadaElegida)
     {
-        LlamadaSeleccionada = llamadaElegida;
-        BuscarDatosLlamada();
-        BuscarRespuestas();
-        Encuesta Enc = BuscarPreguntasDeEncuesta(RtasSeleccionadas);
-        DescripcionEncuesta = Enc.Descripcion;
-        PreguntasYRespuestas = BuscarDescripcionEncuestaYPreguntas(Enc);
-        PantallaEncuesta.pedirOpcionVisualizacion();
+        llamadaSeleccionada = llamadaElegida;
+        buscarDatosLlamada();
+        buscarRespuestas();
+        Encuesta Enc = buscarPreguntasDeEncuesta(rtasSeleccionadas);
+        descripcionEncuesta = Enc.getDescripcion();
+        preguntasYRespuestas = buscarDescripcionEncuestaYPreguntas(Enc);
+        //PantallaEncuesta.pedirOpcionVisualizacion();
     }
 
     // Obtiene los datos de la Llamada guardada en el gestor y llama los métodos en la clase Llamada que necesita
-    public void BuscarDatosLlamada()
+    public void buscarDatosLlamada()
     {
-        List<string> NombreYEstado = llamadaSeleccionada.GetNombreClienteYEstado();
-        NombreCliente = NombreYEstado[0];
-        EstadoActual = NombreYEstado[1];
-        DuracionLlamada = llamadaSeleccionada.Duracion;
-    }*/
+        List<String> nombreYEstado = llamadaSeleccionada.getNombreClienteYEstado();
+        nombreCliente = nombreYEstado.get(0);
+        estadoActual = nombreYEstado.get(1);
+        duracionLlamada = llamadaSeleccionada.getDuracion();
+    }
 
     // Busca las respuestas posibles a través de las respuestas del Cliente de la Llamada y
     //las guarda en la variable del Gestor
@@ -181,6 +158,16 @@ public class GestorEncuesta implements IAgregado {
 
     @Override
     public Iterador crearIterador(List<Object> elementos) {
-        return null;
+        if (!elementos.isEmpty()) {
+            Class<?> tipoElemento = elementos.get(0).getClass();
+
+            if (tipoElemento.equals(Llamada.class)) {
+                return new IteradorLlamada<>(elementos);
+            } else if (tipoElemento.equals(Encuesta.class)) {
+                return new IteradorEncuesta<>(elementos);
+            }
+        }
+        throw new IllegalArgumentException("Tipo de elemento no compatible.");
     }
+
 }
