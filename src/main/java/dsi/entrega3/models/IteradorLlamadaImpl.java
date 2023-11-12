@@ -38,10 +38,7 @@ public class IteradorLlamadaImpl implements IteradorLlamada {
 
     @Override
     public boolean haTerminado() {
-        if (llamadas.get(posicionActual) != null){
-            return true;
-        }
-        else {return false; }
+        return posicionActual >= llamadas.size();
     }
 
     @Override
@@ -49,7 +46,6 @@ public class IteradorLlamadaImpl implements IteradorLlamada {
         if (filtros.size() < 3) {
             return false;
         }
-
         LocalDateTime fechaInicioPeriodo = (LocalDateTime) filtros.get(0);
         LocalDateTime fechaFinPeriodo = (LocalDateTime) filtros.get(1);
         Llamada llamada = (Llamada) filtros.get(2);
@@ -57,3 +53,4 @@ public class IteradorLlamadaImpl implements IteradorLlamada {
         return llamada.esDePeriodo(fechaInicioPeriodo, fechaFinPeriodo) && llamada.tieneEncuestaRespondida();
     }
 }
+

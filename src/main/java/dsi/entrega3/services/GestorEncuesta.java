@@ -2,16 +2,19 @@ package dsi.entrega3.services;
 
 import dsi.entrega3.models.*;
 import dsi.entrega3.models.interfaces.*;
+import dsi.entrega3.repositories.LlamadaRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+@Service
 @AllArgsConstructor
-@NoArgsConstructor
 public class GestorEncuesta implements IAgregado {
 
     // Atributos de la clase GestorEncuesta
@@ -19,40 +22,38 @@ public class GestorEncuesta implements IAgregado {
     private LocalDateTime fechaFinPeriodo;
     private String nombreCliente;
     private float duracionLlamada;
-    private ArrayList<RespuestaDeCliente> rtasCliente;
-    private ArrayList<RespuestaPosible> rtasSeleccionadas;
+    private List<RespuestaDeCliente> rtasCliente;
+    private List<RespuestaPosible> rtasSeleccionadas;
     private List<Pregunta> descripcionPreguntas;
     private Llamada llamadaSeleccionada;
     private List<Encuesta> encuestas;
     private List<Llamada> llamadas;
     private String nombreLlamada;
     private String estadoActual;
-    private ArrayList<String> preguntasYRespuestas;
+    private List<String> preguntasYRespuestas;
     private String descripcionEncuesta;
+    private final LlamadaRepository llamadaRepository;
 
+    @Autowired
+    public GestorEncuesta(LlamadaRepository llamadaRepository) {
+        this.llamadaRepository = llamadaRepository;
+        this.llamadas = llamadaRepository.findAll();
+    }
 
     //Este método guarda las fechas que entran por parámetros como variables del gestor y a su vez llama al método
     //BuscarLlamadasConEncuestaRespondida y guarda el resultado de este en una variable local.
-    public void tomarSeleccionFechasFiltros(LocalDateTime fechaIniP, LocalDateTime fechaFinP)
+    public List<Llamada> tomarSeleccionFechasFiltros(LocalDateTime fechaIniP, LocalDateTime fechaFinP)
     {
         this.fechaInicioPeriodo = fechaIniP;
         this.fechaFinPeriodo = fechaFinP;
 
         List<Llamada> llamadasRespondidas = buscarLlamadasConEncuestaRespondida();
-        if (llamadasRespondidas.size() == 0)
-        {
-            String mensaje = "No existen llamadas con encuestas respondidas en el período indicado."
-                    + "\nPor favor ingresar una nueva fecha de inicio y fin de periodo.";
-        }
-        else
-        {
-            //PantallaEncuesta.pedirSeleccionLlamada(llamadasRespondidas);
-        }
+        return llamadasRespondidas;
     }
     // Este método filtra las llamadas por su periodo y si tiene encuesta respondida y devuelve la Lista de llamadas.
     public List<Llamada> buscarLlamadasConEncuestaRespondida()
     {
-        List<Llamada> llamadasFiltradas = new ArrayList<Llamada>();
+        List<Llamada> llamadasFiltradas = new ArrayList<>();
       /*  for (Llamada llamada : this.llamadas)
         {
             if (llamada.esDePeriodo(fechaInicioPeriodo, fechaFinPeriodo) && llamada.tieneEncuestaRespondida())
@@ -67,7 +68,7 @@ public class GestorEncuesta implements IAgregado {
         filtros.add(fechaInicioPeriodo);
         filtros.add(fechaFinPeriodo);
 
-        IteradorLlamadaImpl iterador = (IteradorLlamadaImpl) crearIterador(Collections.singletonList(this.llamadas));
+        IteradorLlamadaImpl iterador = (IteradorLlamadaImpl) crearIterador(new ArrayList<>(this.llamadas));
         iterador.primero();
         while (!iterador.haTerminado())
         {
@@ -77,6 +78,7 @@ public class GestorEncuesta implements IAgregado {
             {
                 llamadasFiltradas.add(llamada);
             }
+            filtros.remove(llamada);
             iterador.siguiente();
         }
         return llamadasFiltradas;
@@ -127,7 +129,7 @@ public class GestorEncuesta implements IAgregado {
     // Busca de la clase Encuesta las preguntas que la componen y compara con las respuesta
    // guardadas anteriormente si son iguales y si lo son devuelve la encuesta
 
-    public Encuesta buscarPreguntasDeEncuesta(ArrayList<RespuestaPosible> respuestas)
+    public Encuesta buscarPreguntasDeEncuesta(List<RespuestaPosible> respuestas)
     {
        /* for (Encuesta encuesta : encuesta)
         {
@@ -136,7 +138,7 @@ public class GestorEncuesta implements IAgregado {
                 return encuesta;
             }
         }*/
-        IteradorEncuestaImpl iterador = (IteradorEncuestaImpl) crearIterador(Collections.singletonList((encuestas)));
+        IteradorEncuestaImpl iterador = (IteradorEncuestaImpl) crearIterador(new ArrayList<>(encuestas));
 
         iterador.primero();
         while (!iterador.haTerminado()){
@@ -149,9 +151,9 @@ public class GestorEncuesta implements IAgregado {
     }
 
     // Busca en la Encuesta las preguntas y las respuestas guardadas y las ordena en una lista de strings comparandolas
-    public ArrayList<String> buscarDescripcionEncuestaYPreguntas(Encuesta enc)
+    public List<String> buscarDescripcionEncuestaYPreguntas(Encuesta enc)
     {
-        ArrayList<String> encuestaArmada = new ArrayList<String>();
+        List<String> encuestaArmada = new ArrayList<String>();
         for (Pregunta preg : enc.getPreguntas())
         {
             for (RespuestaPosible res : rtasSeleccionadas)
@@ -167,6 +169,8 @@ public class GestorEncuesta implements IAgregado {
     public Iterador crearIterador(List<Object> elementos) {
         if (!elementos.isEmpty()) {
             Class<?> tipoElemento = elementos.get(0).getClass();
+            System.out.println("Elementos en la lista: " + elementos);
+            System.out.println("Tipo de elemento: " + tipoElemento.getName());
 
             if (tipoElemento.equals(Llamada.class)) {
                 return new IteradorLlamadaImpl(elementos);

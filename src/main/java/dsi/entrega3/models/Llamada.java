@@ -1,17 +1,18 @@
 package dsi.entrega3.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Llamada")
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Llamada {
@@ -24,24 +25,35 @@ public class Llamada {
             initialValue = 1, allocationSize = 1)
     private Long id;
 
+    @Column(name = "descripcionOperador")
     private String descripcionOperador;
+
+    @Column(name = "detalleAccionRequerida")
     private String detalleAccionRequerida;
+
+    @Column(name = "duracion")
     private float duracion;
+
+    @Column(name = "encuestaEnviada")
     private int encuestaEnviada;
+
+    @Column(name = "observacionAuditor")
     private String observacionAuditor;
 
     @OneToOne
     @JoinColumn(name = "dni_cliente", nullable = false)
     private Cliente cliente;
 
-    @OneToMany(mappedBy = "llamada", fetch = FetchType.LAZY)
-    private ArrayList<RespuestaDeCliente> respuestasDeEncuesta;
+    @JsonIgnore
+    @OneToMany(mappedBy = "llamada", fetch = FetchType.EAGER)
+    private List<RespuestaDeCliente> respuestasDeEncuesta;
 
-    @OneToMany(mappedBy = "llamada", fetch = FetchType.LAZY)
-    private ArrayList<CambioEstado> cambiosEstado;
+    @JsonIgnore
+    @OneToMany(mappedBy = "llamada", fetch = FetchType.EAGER)
+    private List<CambioEstado> cambiosEstado;
 
     // Este método convierte a los atributos en string para mostrarlos
-    public String mostrarDatos()
+    /*public String mostrarDatos()
     {
         StringBuilder sb = new StringBuilder();
         sb.append("Descripcion del operador:").append(descripcionOperador);
@@ -52,7 +64,7 @@ public class Llamada {
         sb.append("Estado:").append(getNombreClienteYEstado());
 
         return sb.toString();
-    }
+    }*/
     public float calcularDuracion()
     {
         CambioEstado inicial = null;
@@ -95,11 +107,11 @@ public class Llamada {
         return false;
     }
 
-    public ArrayList<String> getNombreClienteYEstado()
+    public List<String> getNombreClienteYEstado()
     {
         String nombreCompleto = cliente.getNombreCompleto();
         String estado = CambioEstado.esEstadoActual(cambiosEstado);
-        ArrayList<String> lista = new ArrayList<String>();
+        List<String> lista = new ArrayList<>();
 
         if (estado != null)
         {

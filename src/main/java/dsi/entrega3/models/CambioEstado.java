@@ -1,9 +1,7 @@
 package dsi.entrega3.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -13,7 +11,8 @@ import java.util.Collection;
 
 @Entity
 @Table(name = "CambioEstado")
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class CambioEstado {
@@ -51,7 +50,7 @@ public class CambioEstado {
     /* Métodos que son utilizados en la implementación del CU */
     public boolean esEstadoInicial()
     {
-        return estado.EsIniciada();
+        return estado.esIniciada();
     }
 
     public boolean esEstadoFinal()

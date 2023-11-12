@@ -36,10 +36,7 @@ public class IteradorEncuestaImpl implements IteradorEncuesta {
 
     @Override
     public boolean haTerminado() {
-        if (encuestas.get(posicionActual) != null){
-            return true;
-        }
-        else {return false; }
+        return posicionActual >= encuestas.size();
     }
 
     @Override

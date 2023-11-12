@@ -3,18 +3,16 @@ package dsi.entrega3.models;
 import dsi.entrega3.models.interfaces.IAgregado;
 import dsi.entrega3.models.interfaces.Iterador;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @Entity
 @Table(name = "Encuesta")
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Encuesta implements IAgregado {
@@ -30,11 +28,11 @@ public class Encuesta implements IAgregado {
     private String descripcion;
     private LocalDateTime fechaFinVigencia;
 
-    @OneToMany(mappedBy = "encuesta", fetch = FetchType.LAZY)
-    public ArrayList<Pregunta> preguntas;
+    @OneToMany(mappedBy = "encuesta", fetch = FetchType.EAGER)
+    public List<Pregunta> preguntas;
 
     // Este método convierte a los atributos en string para mostrarlos
-    public String mostrarDatos()
+    /*public String mostrarDatos()
     {
         StringBuilder sb = new StringBuilder();
 
@@ -45,7 +43,7 @@ public class Encuesta implements IAgregado {
             sb.append(pta.mostrarDatos());
         }
         return sb.toString();
-    }
+    }*/
 
     // Métodos que son utilizados en la implementación del CU
     public boolean esEncuestaDeCliente(List<RespuestaPosible> respuestas)

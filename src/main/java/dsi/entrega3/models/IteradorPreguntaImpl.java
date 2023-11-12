@@ -38,10 +38,7 @@ public class IteradorPreguntaImpl implements IteradorPregunta {
 
     @Override
     public boolean haTerminado() {
-        if (preguntas.get(posicionActual) != null){
-            return true;
-        }
-        else {return false; }
+        return posicionActual >= preguntas.size();
     }
 
     @Override

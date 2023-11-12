@@ -1,13 +1,12 @@
 package dsi.entrega3.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "Estado")
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Estado {
@@ -35,12 +34,12 @@ public class Estado {
     /* Métodos que son utilizados en la implementación del CU */
     public Boolean EsFinalizada()
     {
-        return nombre.equalsIgnoreCase("Finalizada");
+        return nombre.equalsIgnoreCase("FINALIZADA");
     }
 
-    public Boolean EsIniciada()
+    public Boolean esIniciada()
     {
-        if (nombre.equalsIgnoreCase("Iniciada"))
+        if (nombre.equalsIgnoreCase("INICIADA"))
         {
             return true;
         }
