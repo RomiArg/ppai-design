@@ -2,6 +2,7 @@ package dsi.entrega3.models;
 
 import dsi.entrega3.models.interfaces.IteradorLlamada;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,7 @@ public class IteradorLlamadaImpl implements IteradorLlamada {
 
     private int posicionActual;
     private List<Llamada> llamadas;
-    List<String> filtros;
+    List<Object> filtros;
 
     public IteradorLlamadaImpl(List<Object> elementos) {
         this.llamadas = new ArrayList<>();
@@ -44,8 +45,15 @@ public class IteradorLlamadaImpl implements IteradorLlamada {
     }
 
     @Override
-    public boolean cumpleFiltro(List<String> filtros) {
-        this.filtros = filtros;
-        return false;
+    public boolean cumpleFiltro(List<Object> filtros) {
+        if (filtros.size() < 3) {
+            return false;
+        }
+
+        LocalDateTime fechaInicioPeriodo = (LocalDateTime) filtros.get(0);
+        LocalDateTime fechaFinPeriodo = (LocalDateTime) filtros.get(1);
+        Llamada llamada = (Llamada) filtros.get(2);
+
+        return llamada.esDePeriodo(fechaInicioPeriodo, fechaFinPeriodo) && llamada.tieneEncuestaRespondida();
     }
 }

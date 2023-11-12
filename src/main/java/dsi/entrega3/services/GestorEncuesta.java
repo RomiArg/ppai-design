@@ -35,7 +35,6 @@ public class GestorEncuesta implements IAgregado {
         this.descripcionPreguntas = new ArrayList<Pregunta>();
     }
 
-
     //Este método guarda las fechas que entran por parámetros como variables del gestor y a su vez llama al método
     //BuscarLlamadasConEncuestaRespondida y guarda el resultado de este en una variable local.
     public void tomarSeleccionFechasFiltros(LocalDateTime fechaIniP, LocalDateTime fechaFinP)
@@ -67,12 +66,20 @@ public class GestorEncuesta implements IAgregado {
             }
         }
         return llamadasFiltradas;*/
+
+        List<Object> filtros = new ArrayList<>();
+
+        filtros.add(fechaInicioPeriodo);
+        filtros.add(fechaFinPeriodo);
+
         IteradorLlamadaImpl iterador = (IteradorLlamadaImpl) crearIterador(Collections.singletonList(this.llamadas));
         iterador.primero();
         while (!iterador.haTerminado())
         {
             Llamada llamada = iterador.actual();
-            if (llamada.esDePeriodo(fechaInicioPeriodo, fechaFinPeriodo) && llamada.tieneEncuestaRespondida()) {
+            filtros.add(llamada);
+            if (iterador.cumpleFiltro(filtros))
+            {
                 llamadasFiltradas.add(llamada);
             }
             iterador.siguiente();
@@ -163,16 +170,6 @@ public class GestorEncuesta implements IAgregado {
         }
         return encuestaArmada;
     }
-
-/*    @Override
-    public IteradorEncuesta crearIteradorEncuesta(List<Encuesta> elementos) {
-        return new IteradorEncuestaImpl(elementos);
-    }
-
-    @Override
-    public IteradorLlamada crearIteradorLlamada(List<Llamada> elementos) {
-        return new IteradorLlamadaImpl(elementos);
-    }*/
 
     @Override
     public Iterador crearIterador(List<Object> elementos) {
