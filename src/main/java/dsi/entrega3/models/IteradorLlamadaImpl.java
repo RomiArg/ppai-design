@@ -12,14 +12,10 @@ public class IteradorLlamadaImpl implements IteradorLlamada {
     List<String> filtros;
 
     public IteradorLlamadaImpl(List<Object> elementos) {
-        //this.llamadas = elementos;
         this.llamadas = new ArrayList<>();
         for (Object elemento : elementos) {
             if (elemento instanceof Llamada) {
                 this.llamadas.add((Llamada) elemento);
-            } else {
-                // Manejar el caso en que el elemento no es de tipo Llamada, si es necesario
-
             }
         }
     }

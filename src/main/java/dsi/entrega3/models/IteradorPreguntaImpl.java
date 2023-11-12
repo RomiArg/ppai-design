@@ -17,11 +17,8 @@ public class IteradorPreguntaImpl implements IteradorPregunta {
         for (Object elemento : elementos) {
             if (elemento instanceof Pregunta) {
                 this.preguntas.add((Pregunta) elemento);
-            } else {
-                // Manejar el caso en que el elemento no es de tipo Llamada, si es necesario
             }
         }
-        //this.preguntas = elementos;
     }
 
     @Override

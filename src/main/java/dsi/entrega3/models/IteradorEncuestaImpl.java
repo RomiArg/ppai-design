@@ -11,13 +11,10 @@ public class IteradorEncuestaImpl implements IteradorEncuesta {
     private List<Encuesta> encuestas;
 
     public IteradorEncuestaImpl(List<Object> elementos) {
-       // this.encuestas = elementos;
         this.encuestas = new ArrayList<>();
         for (Object elemento : elementos) {
             if (elemento instanceof Encuesta) {
                 this.encuestas.add((Encuesta) elemento);
-            } else {
-                // Manejar el caso en que el elemento no es de tipo Llamada, si es necesario
             }
         }
     }
