@@ -2,12 +2,16 @@ package dsi.entrega3.services;
 
 import dsi.entrega3.models.*;
 import dsi.entrega3.models.interfaces.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@AllArgsConstructor
+@NoArgsConstructor
 public class GestorEncuesta implements IAgregado {
 
     // Atributos de la clase GestorEncuesta
@@ -26,28 +30,19 @@ public class GestorEncuesta implements IAgregado {
     private ArrayList<String> preguntasYRespuestas;
     private String descripcionEncuesta;
 
-    public GestorEncuesta()
-    {
-        this.llamadas =             new ArrayList<Llamada>();
-        this.encuestas =             new ArrayList<Encuesta>();
-        this.rtasCliente =          new ArrayList<RespuestaDeCliente>();
-        this.rtasSeleccionadas =    new ArrayList<RespuestaPosible>();
-        this.descripcionPreguntas = new ArrayList<Pregunta>();
-    }
 
     //Este método guarda las fechas que entran por parámetros como variables del gestor y a su vez llama al método
     //BuscarLlamadasConEncuestaRespondida y guarda el resultado de este en una variable local.
     public void tomarSeleccionFechasFiltros(LocalDateTime fechaIniP, LocalDateTime fechaFinP)
     {
-        fechaInicioPeriodo = fechaIniP;
-        fechaFinPeriodo = fechaFinP;
+        this.fechaInicioPeriodo = fechaIniP;
+        this.fechaFinPeriodo = fechaFinP;
 
         List<Llamada> llamadasRespondidas = buscarLlamadasConEncuestaRespondida();
         if (llamadasRespondidas.size() == 0)
         {
             String mensaje = "No existen llamadas con encuestas respondidas en el período indicado."
                     + "\nPor favor ingresar una nueva fecha de inicio y fin de periodo.";
-            //return null;
         }
         else
         {
@@ -98,12 +93,12 @@ public class GestorEncuesta implements IAgregado {
     //y manda un mensaje a la Pantalla para que muestre los datos en la tabla
     public void tomarSeleccionLlamada(Llamada llamadaElegida)
     {
-        llamadaSeleccionada = llamadaElegida;
+        this.llamadaSeleccionada = llamadaElegida;
         buscarDatosLlamada();
         buscarRespuestas();
-        Encuesta Enc = buscarPreguntasDeEncuesta(rtasSeleccionadas);
-        descripcionEncuesta = Enc.getDescripcion();
-        preguntasYRespuestas = buscarDescripcionEncuestaYPreguntas(Enc);
+        Encuesta encuesta = buscarPreguntasDeEncuesta(rtasSeleccionadas);
+        this.descripcionEncuesta = encuesta.getDescripcion();
+        this.preguntasYRespuestas = buscarDescripcionEncuestaYPreguntas(encuesta);
         //PantallaEncuesta.pedirOpcionVisualizacion();
     }
 
@@ -111,21 +106,21 @@ public class GestorEncuesta implements IAgregado {
     public void buscarDatosLlamada()
     {
         List<String> nombreYEstado = llamadaSeleccionada.getNombreClienteYEstado();
-        nombreCliente = nombreYEstado.get(0);
-        estadoActual = nombreYEstado.get(1);
-        duracionLlamada = llamadaSeleccionada.getDuracion();
+        this.nombreCliente = nombreYEstado.get(0);
+        this.estadoActual = nombreYEstado.get(1);
+        this.duracionLlamada = llamadaSeleccionada.getDuracion();
     }
 
     // Busca las respuestas posibles a través de las respuestas del Cliente de la Llamada y
     //las guarda en la variable del Gestor
     public void buscarRespuestas()
     {
-        rtasCliente = llamadaSeleccionada.getRespuestasDeEncuesta();
-        rtasSeleccionadas = new ArrayList<RespuestaPosible>();
+        this.rtasCliente = llamadaSeleccionada.getRespuestasDeEncuesta();
+        this.rtasSeleccionadas = new ArrayList<RespuestaPosible>();
 
         for (RespuestaDeCliente res : rtasCliente)
         {
-            rtasSeleccionadas.add(res.getRespuestaSeleccionada());
+            this.rtasSeleccionadas.add(res.getRespuestaSeleccionada());
         }
     }
 
@@ -160,13 +155,10 @@ public class GestorEncuesta implements IAgregado {
         for (Pregunta preg : enc.getPreguntas())
         {
             for (RespuestaPosible res : rtasSeleccionadas)
-            {
-                if (preg.getRespuestaPosibles().contains(res))
-                {
+                if (preg.getRespuestaPosibles().contains(res)) {
                     encuestaArmada.add(preg.getPregunta());
                     encuestaArmada.add(res.getDescripcion());
                 }
-            }
         }
         return encuestaArmada;
     }
