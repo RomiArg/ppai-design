@@ -1,5 +1,7 @@
 package dsi.entrega3.models;
 
+import dsi.entrega3.models.interfaces.IAgregado;
+import dsi.entrega3.models.interfaces.Iterador;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,13 +9,15 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Entity
 @Table(name = "Encuesta")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Encuesta {
+public class Encuesta implements IAgregado {
 
     @Id
     @Column(name = "id")
@@ -44,14 +48,23 @@ public class Encuesta {
     }
 
     // Métodos que son utilizados en la implementación del CU
-    public boolean esEncuestaDeCliente(ArrayList<RespuestaPosible> respuestas)
+    public boolean esEncuestaDeCliente(List<RespuestaPosible> respuestas)
     {
-        for (Pregunta pregunta : preguntas)
+        IteradorPreguntaImpl iterador = (IteradorPreguntaImpl) crearIterador(Collections.singletonList(preguntas));
+       /* for (Pregunta pregunta : preguntas)
         {
             if (!pregunta.esEncuestaDeCliente(respuestas))
             {
                 return false;
             }
+        }*/
+        iterador.primero();
+        while (!iterador.haTerminado())
+        {
+            Pregunta pregunta = iterador.actual();
+            if (!iterador.cumpleFiltro(respuestas))
+            {return false;}
+            iterador.siguiente();
         }
         return true;
     }
@@ -65,4 +78,15 @@ public class Encuesta {
         return false;
     }
 
+    @Override
+    public Iterador crearIterador(List<Object> elementos) {
+        if (!elementos.isEmpty()) {
+            Class<?> tipoElemento = elementos.get(0).getClass();
+
+            if (tipoElemento.equals(Pregunta.class)) {
+                return new IteradorPreguntaImpl(elementos);
+            }
+        }
+        throw new IllegalArgumentException("Tipo de elemento no compatible.");
+    }
 }

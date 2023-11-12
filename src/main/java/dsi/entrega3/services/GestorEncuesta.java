@@ -1,8 +1,7 @@
 package dsi.entrega3.services;
 
 import dsi.entrega3.models.*;
-import dsi.entrega3.models.interfaces.IAgregado;
-import dsi.entrega3.models.interfaces.Iterador;
+import dsi.entrega3.models.interfaces.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -12,7 +11,6 @@ import java.util.List;
 public class GestorEncuesta implements IAgregado {
 
     // Atributos de la clase GestorEncuesta
-
     private LocalDateTime fechaInicioPeriodo;
     private LocalDateTime fechaFinPeriodo;
     private String nombreCliente;
@@ -21,7 +19,7 @@ public class GestorEncuesta implements IAgregado {
     private ArrayList<RespuestaPosible> rtasSeleccionadas;
     private List<Pregunta> descripcionPreguntas;
     private Llamada llamadaSeleccionada;
-    private List<Encuesta> encuesta;
+    private List<Encuesta> encuestas;
     private List<Llamada> llamadas;
     private String nombreLlamada;
     private String estadoActual;
@@ -31,7 +29,7 @@ public class GestorEncuesta implements IAgregado {
     public GestorEncuesta()
     {
         this.llamadas =             new ArrayList<Llamada>();
-        this.encuesta =             new ArrayList<Encuesta>();
+        this.encuestas =             new ArrayList<Encuesta>();
         this.rtasCliente =          new ArrayList<RespuestaDeCliente>();
         this.rtasSeleccionadas =    new ArrayList<RespuestaPosible>();
         this.descripcionPreguntas = new ArrayList<Pregunta>();
@@ -40,7 +38,7 @@ public class GestorEncuesta implements IAgregado {
 
     //Este método guarda las fechas que entran por parámetros como variables del gestor y a su vez llama al método
     //BuscarLlamadasConEncuestaRespondida y guarda el resultado de este en una variable local.
-    public void TomarSeleccionFechasFiltros(LocalDateTime fechaIniP, LocalDateTime fechaFinP)
+    public void tomarSeleccionFechasFiltros(LocalDateTime fechaIniP, LocalDateTime fechaFinP)
     {
         fechaInicioPeriodo = fechaIniP;
         fechaFinPeriodo = fechaFinP;
@@ -69,7 +67,8 @@ public class GestorEncuesta implements IAgregado {
             }
         }
         return llamadasFiltradas;*/
-        IteradorLlamada<Llamada> iterador = (IteradorLlamada<Llamada>) crearIterador(Collections.singletonList(this.llamadas));
+        IteradorLlamadaImpl iterador = (IteradorLlamadaImpl) crearIterador(Collections.singletonList(this.llamadas));
+        iterador.primero();
         while (!iterador.haTerminado())
         {
             Llamada llamada = iterador.actual();
@@ -128,17 +127,26 @@ public class GestorEncuesta implements IAgregado {
 
     public Encuesta buscarPreguntasDeEncuesta(ArrayList<RespuestaPosible> respuestas)
     {
-        for (Encuesta encuesta : encuesta)
+       /* for (Encuesta encuesta : encuesta)
         {
             if (encuesta.esEncuestaDeCliente(respuestas))
             {
                 return encuesta;
             }
+        }*/
+        IteradorEncuestaImpl iterador = (IteradorEncuestaImpl) crearIterador(Collections.singletonList((encuestas)));
+
+        iterador.primero();
+        while (!iterador.haTerminado()){
+            Encuesta encuesta = iterador.actual();
+            if(encuesta.esEncuestaDeCliente(respuestas))
+                return encuesta;
+            iterador.siguiente();
         }
         return null;
     }
 
-    // Busca en la Encuesta las preguntas y las respustas guardadas y las ordena en una lista de strings comparandolas
+    // Busca en la Encuesta las preguntas y las respuestas guardadas y las ordena en una lista de strings comparandolas
     public ArrayList<String> buscarDescripcionEncuestaYPreguntas(Encuesta enc)
     {
         ArrayList<String> encuestaArmada = new ArrayList<String>();
@@ -156,18 +164,27 @@ public class GestorEncuesta implements IAgregado {
         return encuestaArmada;
     }
 
+/*    @Override
+    public IteradorEncuesta crearIteradorEncuesta(List<Encuesta> elementos) {
+        return new IteradorEncuestaImpl(elementos);
+    }
+
+    @Override
+    public IteradorLlamada crearIteradorLlamada(List<Llamada> elementos) {
+        return new IteradorLlamadaImpl(elementos);
+    }*/
+
     @Override
     public Iterador crearIterador(List<Object> elementos) {
         if (!elementos.isEmpty()) {
             Class<?> tipoElemento = elementos.get(0).getClass();
 
             if (tipoElemento.equals(Llamada.class)) {
-                return new IteradorLlamada<>(elementos);
+                return new IteradorLlamadaImpl(elementos);
             } else if (tipoElemento.equals(Encuesta.class)) {
-                return new IteradorEncuesta<>(elementos);
+                return new IteradorEncuestaImpl(elementos);
             }
         }
         throw new IllegalArgumentException("Tipo de elemento no compatible.");
     }
-
 }
