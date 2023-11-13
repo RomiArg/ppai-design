@@ -30,7 +30,8 @@ public class Encuesta implements IAgregado {
     private LocalDateTime fechaFinVigencia;
 
     @OneToMany(mappedBy = "encuesta", fetch = FetchType.EAGER)
-    public List<Pregunta> preguntas;
+    private List<Pregunta> preguntas;
+
 
     // Este método convierte a los atributos en string para mostrarlos
     /*public String mostrarDatos()

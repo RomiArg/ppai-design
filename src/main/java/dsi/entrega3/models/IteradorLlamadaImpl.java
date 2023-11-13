@@ -12,13 +12,14 @@ public class IteradorLlamadaImpl implements IteradorLlamada {
     private List<Llamada> llamadas;
     List<Object> filtros;
 
-    public IteradorLlamadaImpl(List<Object> elementos) {
+    public IteradorLlamadaImpl(List<Object> elementos, List<Object> filtros) {
         this.llamadas = new ArrayList<>();
         for (Object elemento : elementos) {
             if (elemento instanceof Llamada) {
                 this.llamadas.add((Llamada) elemento);
             }
         }
+        this.filtros = filtros;
     }
 
     @Override
@@ -32,8 +33,13 @@ public class IteradorLlamadaImpl implements IteradorLlamada {
     }
 
     @Override
-    public dsi.entrega3.models.Llamada actual() {
-        return llamadas.get(posicionActual);
+    public Llamada actual() {
+        this.filtros.add(llamadas.get(posicionActual));
+        if (cumpleFiltro(filtros)){
+            this.filtros.remove(llamadas.get(posicionActual));
+            return llamadas.get(posicionActual);}
+        this.filtros.remove(llamadas.get(posicionActual));
+        return null;
     }
 
     @Override

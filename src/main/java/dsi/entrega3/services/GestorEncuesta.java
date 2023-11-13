@@ -35,6 +35,7 @@ public class GestorEncuesta implements IAgregado {
     private String descripcionEncuesta;
     private final LlamadaRepository llamadaRepository;
     private final EncuestaRepository encuestaRepository;
+    private List<Object> filtrosLlamadas;
 
     @Autowired
     public GestorEncuesta(LlamadaRepository llamadaRepository, EncuestaRepository encuestaRepository) {
@@ -54,6 +55,7 @@ public class GestorEncuesta implements IAgregado {
         List<Llamada> llamadasRespondidas = buscarLlamadasConEncuestaRespondida();
         return llamadasRespondidas;
     }
+
     // Este método filtra las llamadas por su periodo y si tiene encuesta respondida y devuelve la Lista de llamadas.
     public List<Llamada> buscarLlamadasConEncuestaRespondida()
     {
@@ -67,22 +69,21 @@ public class GestorEncuesta implements IAgregado {
         }
         return llamadasFiltradas;*/
 
-        List<Object> filtros = new ArrayList<>();
+        this.filtrosLlamadas = new ArrayList<>();
 
-        filtros.add(fechaInicioPeriodo);
-        filtros.add(fechaFinPeriodo);
+        this.filtrosLlamadas.add(fechaInicioPeriodo);
+        this.filtrosLlamadas.add(fechaFinPeriodo);
 
         IteradorLlamadaImpl iterador = (IteradorLlamadaImpl) crearIterador(new ArrayList<>(this.llamadas));
         iterador.primero();
         while (!iterador.haTerminado())
         {
             Llamada llamada = iterador.actual();
-            filtros.add(llamada);
-            if (iterador.cumpleFiltro(filtros))
+            if (llamada != null)
             {
                 llamadasFiltradas.add(llamada);
             }
-            filtros.remove(llamada);
+
             iterador.siguiente();
         }
         return llamadasFiltradas;
@@ -178,7 +179,7 @@ public class GestorEncuesta implements IAgregado {
             Class<?> tipoElemento = elementos.get(0).getClass();
 
             if (tipoElemento.equals(Llamada.class)) {
-                return new IteradorLlamadaImpl(elementos);
+                return new IteradorLlamadaImpl(elementos, this.filtrosLlamadas);
             } else if (tipoElemento.equals(Encuesta.class)) {
                 return new IteradorEncuestaImpl(elementos);
             }
