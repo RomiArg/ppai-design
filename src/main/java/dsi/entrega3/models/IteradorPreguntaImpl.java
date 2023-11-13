@@ -12,7 +12,7 @@ public class IteradorPreguntaImpl implements IteradorPregunta {
     private List<RespuestaPosible> filtros;
 
 
-    public IteradorPreguntaImpl(List<Object> elementos, List<RespuestaPosible> filtros)  {
+    public IteradorPreguntaImpl(List<Object> elementos)  {
         this.preguntas = new ArrayList<>();
         for (Object elemento : elementos) {
             if (elemento instanceof Pregunta) {
@@ -36,7 +36,7 @@ public class IteradorPreguntaImpl implements IteradorPregunta {
     public Pregunta actual() {
         if (cumpleFiltro(filtros))
             return preguntas.get(posicionActual);
-        return preguntas.get(posicionActual+1);
+        return null;
     }
 
     @Override
