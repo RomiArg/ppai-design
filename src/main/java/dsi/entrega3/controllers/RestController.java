@@ -26,7 +26,7 @@ public class RestController {
     }
 
     @GetMapping("encuestas/{fechaInicio}/{fechaFin}")
-    public ResponseEntity<List<Llamada>> getLlamadas(
+    public ResponseEntity<List<Llamada>> consultarEncuestas(
             @PathVariable String fechaInicio,
             @PathVariable String fechaFin) {
         // Convertir las fechas a LocalDateTime
@@ -37,7 +37,7 @@ public class RestController {
     }
 
     @GetMapping("encuestas/{id}")
-    public ResponseEntity<List<String>> getLlamadas(
+    public ResponseEntity<List<String>> getEncuesta(
             @PathVariable Long id) {
         gestorEncuesta.tomarSeleccionLlamada(id);
 
@@ -55,4 +55,9 @@ public class RestController {
         // Devolver la respuesta ResponseEntity
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("encuestas/CSV")
+    public ResponseEntity generarCSV(){
+        return ResponseEntity.ok("OK");
+    };
 }

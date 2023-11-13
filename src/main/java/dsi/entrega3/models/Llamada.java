@@ -13,8 +13,8 @@ import java.util.List;
 @Table(name = "Llamada")
 @Setter
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class Llamada {
     // Atributos de la clase Llamada
     @Id
@@ -51,6 +51,7 @@ public class Llamada {
     @JsonIgnore
     @OneToMany(mappedBy = "llamada", fetch = FetchType.EAGER)
     private List<CambioEstado> cambiosEstado;
+
 
     // Este método convierte a los atributos en string para mostrarlos
     public String mostrarDatos()

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Getter
@@ -35,6 +34,7 @@ public class GestorEncuesta implements IAgregado {
     private String descripcionEncuesta;
     private final LlamadaRepository llamadaRepository;
     private final EncuestaRepository encuestaRepository;
+    private List<Object> filtrosLlamadas;
 
     @Autowired
     public GestorEncuesta(LlamadaRepository llamadaRepository, EncuestaRepository encuestaRepository) {
@@ -54,46 +54,34 @@ public class GestorEncuesta implements IAgregado {
         List<Llamada> llamadasRespondidas = buscarLlamadasConEncuestaRespondida();
         return llamadasRespondidas;
     }
+
     // Este método filtra las llamadas por su periodo y si tiene encuesta respondida y devuelve la Lista de llamadas.
     public List<Llamada> buscarLlamadasConEncuestaRespondida()
     {
         List<Llamada> llamadasFiltradas = new ArrayList<>();
-      /*  for (Llamada llamada : this.llamadas)
-        {
-            if (llamada.esDePeriodo(fechaInicioPeriodo, fechaFinPeriodo) && llamada.tieneEncuestaRespondida())
-            {
-                llamadasFiltradas.add(llamada);
-            }
-        }
-        return llamadasFiltradas;*/
 
-        List<Object> filtros = new ArrayList<>();
-
-        filtros.add(fechaInicioPeriodo);
-        filtros.add(fechaFinPeriodo);
+        this.filtrosLlamadas = new ArrayList<>();
+        this.filtrosLlamadas.add(fechaInicioPeriodo);
+        this.filtrosLlamadas.add(fechaFinPeriodo);
 
         IteradorLlamadaImpl iterador = (IteradorLlamadaImpl) crearIterador(new ArrayList<>(this.llamadas));
         iterador.primero();
         while (!iterador.haTerminado())
         {
             Llamada llamada = iterador.actual();
-            filtros.add(llamada);
-            if (iterador.cumpleFiltro(filtros))
+            if (llamada != null)
             {
                 llamadasFiltradas.add(llamada);
             }
-            filtros.remove(llamada);
+
             iterador.siguiente();
         }
         return llamadasFiltradas;
     }
 
     // Métodos que son utilizados en la implementación del CU
-    public void consultarEncuesta()
-    {
-        //PantallaEncuesta.pedirFechasFiltroPeriodo();
-
-    }
+    public void consultarEncuesta(){
+    };
 
     //Setea la variable LlamadaElegida del gestor y realiza la búsqueda de los datos de la Llamada y la Encuesta
     //y manda un mensaje a la Pantalla para que muestre los datos en la tabla
@@ -106,7 +94,6 @@ public class GestorEncuesta implements IAgregado {
         Encuesta encuesta = buscarPreguntasDeEncuesta(rtasSeleccionadas);
         this.descripcionEncuesta = encuesta.getDescripcion();
         this.preguntasYRespuestas = buscarDescripcionEncuestaYPreguntas(encuesta);
-        //PantallaEncuesta.pedirOpcionVisualizacion();
     }
 
     // Obtiene los datos de la Llamada guardada en el gestor y llama los métodos en la clase Llamada que necesita
@@ -122,14 +109,8 @@ public class GestorEncuesta implements IAgregado {
     //las guarda en la variable del Gestor
     public void buscarRespuestas()
     {
-        System.out.println(llamadaRepository.findById((long) 1));
-
-        System.out.println(llamadaSeleccionada.mostrarDatos());
         this.rtasCliente = llamadaSeleccionada.getRespuestasDeEncuesta();
         this.rtasSeleccionadas = new ArrayList<RespuestaPosible>();
-
-        System.out.println("RESPUESTAS: " + rtasCliente);
-
         for (RespuestaDeCliente res : rtasCliente)
         {
             this.rtasSeleccionadas.add(res.getRespuestaSeleccionada());
@@ -141,21 +122,12 @@ public class GestorEncuesta implements IAgregado {
 
     public Encuesta buscarPreguntasDeEncuesta(List<RespuestaPosible> respuestas)
     {
-       /*for (Encuesta encuesta : encuesta)
-        {
-            if (encuesta.esEncuestaDeCliente(respuestas))
-            {
-                return encuesta;
-            }
-        }*/
         IteradorEncuestaImpl iterador = (IteradorEncuestaImpl) crearIterador(new ArrayList<>(encuestas));
 
         iterador.primero();
         while (!iterador.haTerminado()){
-            System.out.println(iterador.actual().getId());
             Encuesta encuesta = iterador.actual();
             if(encuesta.esEncuestaDeCliente(respuestas)){
-                System.out.println("ACAAAAAAAAAAAAAA");
                 return encuesta;
             }
             iterador.siguiente();
@@ -164,19 +136,20 @@ public class GestorEncuesta implements IAgregado {
     }
 
     // Busca en la Encuesta las preguntas y las respuestas guardadas y las ordena en una lista de strings comparandolas
-    public List<String> buscarDescripcionEncuestaYPreguntas(Encuesta enc)
-    {
-        List<String> encuestaArmada = new ArrayList<String>();
-        for (Pregunta preg : enc.getPreguntas())
-        {
-            for (RespuestaPosible res : rtasSeleccionadas)
-                if (preg.getRespuestaPosibles().contains(res)) {
+    public List<String> buscarDescripcionEncuestaYPreguntas(Encuesta enc) {
+        List<String> encuestaArmada = new ArrayList<>();
+
+        for (Pregunta preg : enc.getPreguntas()) {
+            for (RespuestaPosible res : rtasSeleccionadas) {
+                if (preg.getRespuestaPosibles().stream().anyMatch(resp -> resp.getId().equals(res.getId()))) {
                     encuestaArmada.add(preg.getPregunta());
                     encuestaArmada.add(res.getDescripcion());
                 }
+            }
         }
         return encuestaArmada;
     }
+
 
     @Override
     public Iterador crearIterador(List<Object> elementos) {
@@ -184,7 +157,7 @@ public class GestorEncuesta implements IAgregado {
             Class<?> tipoElemento = elementos.get(0).getClass();
 
             if (tipoElemento.equals(Llamada.class)) {
-                return new IteradorLlamadaImpl(elementos);
+                return new IteradorLlamadaImpl(elementos, this.filtrosLlamadas);
             } else if (tipoElemento.equals(Encuesta.class)) {
                 return new IteradorEncuestaImpl(elementos);
             }

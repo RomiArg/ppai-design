@@ -12,13 +12,14 @@ public class IteradorPreguntaImpl implements IteradorPregunta {
     private List<RespuestaPosible> filtros;
 
 
-    public IteradorPreguntaImpl(List<Object> elementos) {
+    public IteradorPreguntaImpl(List<Object> elementos)  {
         this.preguntas = new ArrayList<>();
         for (Object elemento : elementos) {
             if (elemento instanceof Pregunta) {
                 this.preguntas.add((Pregunta) elemento);
             }
         }
+        this.filtros = filtros;
     }
 
     @Override
@@ -32,7 +33,10 @@ public class IteradorPreguntaImpl implements IteradorPregunta {
     }
 
     @Override
-    public dsi.entrega3.models.Pregunta actual() {
+    public Pregunta actual() {
+        /*if (cumpleFiltro(filtros))
+            return preguntas.get(posicionActual);
+        return null;*/
         return preguntas.get(posicionActual);
     }
 
@@ -42,12 +46,9 @@ public class IteradorPreguntaImpl implements IteradorPregunta {
     }
 
     @Override
-    public boolean cumpleFiltro(List<dsi.entrega3.models.RespuestaPosible> filtros) {
-        this.filtros = filtros;
-        System.out.println(filtros);
-        for (dsi.entrega3.models.Pregunta pregunta : preguntas)
+    public boolean cumpleFiltro(List<RespuestaPosible> filtros) {
+        for (Pregunta pregunta : preguntas)
         {
-            System.out.println(pregunta.getPregunta());
             if (!pregunta.esEncuestaDeCliente(filtros))
             {
                 return false;
