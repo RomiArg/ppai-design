@@ -3,6 +3,7 @@ package dsi.entrega3.controllers;
 import dsi.entrega3.models.Llamada;
 import dsi.entrega3.services.GestorEncuesta;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/ivr")
+@CrossOrigin(origins = "http://localhost:3000")
 public class RestController {
 
     private GestorEncuesta gestorEncuesta;
