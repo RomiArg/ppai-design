@@ -36,6 +36,7 @@ public class CambioEstado {
     @JoinColumn(name = "id_llamada", nullable = false)
     private Llamada llamada;
 
+
     /* Este método convierte a los atributos en string para mostrarlos */
     public String mostrarDatos()
     {

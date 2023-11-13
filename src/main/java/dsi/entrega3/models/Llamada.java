@@ -53,7 +53,7 @@ public class Llamada {
     private List<CambioEstado> cambiosEstado;
 
     // Este método convierte a los atributos en string para mostrarlos
-    /*public String mostrarDatos()
+    public String mostrarDatos()
     {
         StringBuilder sb = new StringBuilder();
         sb.append("Descripcion del operador:").append(descripcionOperador);
@@ -64,7 +64,7 @@ public class Llamada {
         sb.append("Estado:").append(getNombreClienteYEstado());
 
         return sb.toString();
-    }*/
+    }
     public float calcularDuracion()
     {
         CambioEstado inicial = null;

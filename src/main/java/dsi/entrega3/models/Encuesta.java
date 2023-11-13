@@ -49,20 +49,20 @@ public class Encuesta implements IAgregado {
     // Métodos que son utilizados en la implementación del CU
     public boolean esEncuestaDeCliente(List<RespuestaPosible> respuestas)
     {
-        IteradorPreguntaImpl iterador = (IteradorPreguntaImpl) crearIterador(new ArrayList<>(this.preguntas));
-       /* for (Pregunta pregunta : preguntas)
+        /* for (Pregunta pregunta : preguntas)
         {
             if (!pregunta.esEncuestaDeCliente(respuestas))
             {
                 return false;
             }
         }*/
+        IteradorPreguntaImpl iterador = (IteradorPreguntaImpl) crearIterador(new ArrayList<>(this.preguntas));
         iterador.primero();
         while (!iterador.haTerminado())
         {
             Pregunta pregunta = iterador.actual();
-            //if (!iterador.cumpleFiltro(respuestas))
-            //{return false;}
+            if (!iterador.cumpleFiltro(respuestas))
+            {return false;}
             iterador.siguiente();
         }
         return true;

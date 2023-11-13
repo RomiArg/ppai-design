@@ -122,8 +122,13 @@ public class GestorEncuesta implements IAgregado {
     //las guarda en la variable del Gestor
     public void buscarRespuestas()
     {
+        System.out.println(llamadaRepository.findById((long) 1));
+
+        System.out.println(llamadaSeleccionada.mostrarDatos());
         this.rtasCliente = llamadaSeleccionada.getRespuestasDeEncuesta();
         this.rtasSeleccionadas = new ArrayList<RespuestaPosible>();
+
+        System.out.println("RESPUESTAS: " + rtasCliente);
 
         for (RespuestaDeCliente res : rtasCliente)
         {
@@ -150,6 +155,7 @@ public class GestorEncuesta implements IAgregado {
             System.out.println(iterador.actual().getId());
             Encuesta encuesta = iterador.actual();
             if(encuesta.esEncuestaDeCliente(respuestas)){
+                System.out.println("ACAAAAAAAAAAAAAA");
                 return encuesta;
             }
             iterador.siguiente();

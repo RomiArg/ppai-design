@@ -44,6 +44,7 @@ public class IteradorPreguntaImpl implements IteradorPregunta {
     @Override
     public boolean cumpleFiltro(List<dsi.entrega3.models.RespuestaPosible> filtros) {
         this.filtros = filtros;
+        System.out.println(filtros);
         for (dsi.entrega3.models.Pregunta pregunta : preguntas)
         {
             System.out.println(pregunta.getPregunta());
@@ -54,4 +55,5 @@ public class IteradorPreguntaImpl implements IteradorPregunta {
         }
         return true;
     }
+
 }
