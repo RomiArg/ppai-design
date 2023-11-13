@@ -54,18 +54,6 @@ public class Llamada {
 
 
     // Este método convierte a los atributos en string para mostrarlos
-    public String mostrarDatos()
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Descripcion del operador:").append(descripcionOperador);
-        sb.append("Detalle de Acción Requerida:").append(detalleAccionRequerida);
-        sb.append("Datos del cliente:").append(cliente.MostrarDatos());
-        sb.append("Encuesta:");
-        sb.append("Observación del auditor:").append(observacionAuditor);
-        sb.append("Estado:").append(getNombreClienteYEstado());
-
-        return sb.toString();
-    }
     public float calcularDuracion()
     {
         CambioEstado inicial = null;

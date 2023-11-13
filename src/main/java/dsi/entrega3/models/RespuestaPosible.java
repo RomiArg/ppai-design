@@ -26,17 +26,6 @@ public class RespuestaPosible {
     @JoinColumn(name = "id_pregunta", nullable = false)
     private Pregunta pregunta;
 
-    /* Este método convierte a los atributos en string para mostrarlos */
-    public String mostrarDatos()
-    {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("Descripcion: ").append(descripcion);
-        sb.append("valor").append(valor);
-
-        return sb.toString();
-    }
-
     /* Método que se utiliza en la implementación del CU */
     public String getDescripcionRta() { return descripcion; }
 

@@ -19,7 +19,6 @@ public class IteradorPreguntaImpl implements IteradorPregunta {
                 this.preguntas.add((Pregunta) elemento);
             }
         }
-        this.filtros = filtros;
     }
 
     @Override
@@ -34,9 +33,6 @@ public class IteradorPreguntaImpl implements IteradorPregunta {
 
     @Override
     public Pregunta actual() {
-        /*if (cumpleFiltro(filtros))
-            return preguntas.get(posicionActual);
-        return null;*/
         return preguntas.get(posicionActual);
     }
 

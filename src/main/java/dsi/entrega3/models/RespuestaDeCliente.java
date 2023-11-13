@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RespuestaDeCliente {
+
         // Atributos de la clase RespuestaDeCliente
         @Id
         @Column(name = "id")
@@ -31,17 +32,6 @@ public class RespuestaDeCliente {
         @ManyToOne
         @JoinColumn(name = "id_llamada", nullable = false)
         private Llamada llamada;
-
-        // Este método convierte a los atributos en string para mostrarlos
-        public String mostrarDatos()
-        {
-            StringBuilder sb = new StringBuilder();
-
-            sb.append("Fecha De Encuesta: ").append(fechaDeEncuesta.toString());
-            sb.append("Respuesta Seleccionada: ").append(respuestaSeleccionada.mostrarDatos());
-
-            return sb.toString();
-        }
 
          //Método que se utiliza en la implementación del CU
         public String getDescripcionRta()

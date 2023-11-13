@@ -3,11 +3,13 @@ package dsi.entrega3.models;
 import dsi.entrega3.models.interfaces.IAgregado;
 import dsi.entrega3.models.interfaces.Iterador;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -33,30 +35,9 @@ public class Encuesta implements IAgregado {
     private List<Pregunta> preguntas;
 
 
-    // Este método convierte a los atributos en string para mostrarlos
-    /*public String mostrarDatos()
-    {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("Descripcion: ").append(descripcion);
-        sb.append("Fecha Fin Vigencia: ").append(fechaFinVigencia.toString());
-        for (Pregunta pta : preguntas)
-        {
-            sb.append(pta.mostrarDatos());
-        }
-        return sb.toString();
-    }*/
-
     // Métodos que son utilizados en la implementación del CU
     public boolean esEncuestaDeCliente(List<RespuestaPosible> respuestas)
     {
-        /* for (Pregunta pregunta : preguntas)
-        {
-            if (!pregunta.esEncuestaDeCliente(respuestas))
-            {
-                return false;
-            }
-        }*/
         IteradorPreguntaImpl iterador = (IteradorPreguntaImpl) crearIterador(new ArrayList<>(this.preguntas));
         iterador.primero();
         while (!iterador.haTerminado())

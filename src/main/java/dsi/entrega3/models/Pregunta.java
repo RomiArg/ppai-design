@@ -1,7 +1,10 @@
 package dsi.entrega3.models;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -29,30 +32,6 @@ public class Pregunta {
 
     @OneToMany(mappedBy = "pregunta", fetch = FetchType.EAGER)
     private List<RespuestaPosible> respuestaPosibles;
-
-    /* Este método convierte a los atributos en string para mostrarlos */
-    /*public String mostrarDatos()
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append(pregunta);
-        for (RespuestaPosible rta: respuestaPosibles) {
-            sb.append(rta.mostrarDatos());
-        }
-        return sb.toString();
-    }*/
-
-    /* Métodos que son utilizados en la implementación del CU */
-    /*public String listarRespuestasPosibles()
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Respuestas Posibles: ");
-        for (RespuestaPosible respuestaPosible : respuestaPosibles)
-        {
-            sb.append(respuestaPosible.mostrarDatos());
-            sb.append("");
-        }
-        return sb.toString();
-    }*/
 
     public Boolean esEncuestaDeCliente(List<RespuestaPosible> respuestas)
     {
