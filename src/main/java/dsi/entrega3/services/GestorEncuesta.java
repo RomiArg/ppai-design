@@ -2,18 +2,19 @@ package dsi.entrega3.services;
 
 import dsi.entrega3.models.*;
 import dsi.entrega3.models.interfaces.*;
+import dsi.entrega3.repositories.EncuestaRepository;
 import dsi.entrega3.repositories.LlamadaRepository;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@Getter
 @AllArgsConstructor
 public class GestorEncuesta implements IAgregado {
 
@@ -33,11 +34,14 @@ public class GestorEncuesta implements IAgregado {
     private List<String> preguntasYRespuestas;
     private String descripcionEncuesta;
     private final LlamadaRepository llamadaRepository;
+    private final EncuestaRepository encuestaRepository;
 
     @Autowired
-    public GestorEncuesta(LlamadaRepository llamadaRepository) {
+    public GestorEncuesta(LlamadaRepository llamadaRepository, EncuestaRepository encuestaRepository) {
         this.llamadaRepository = llamadaRepository;
+        this.encuestaRepository = encuestaRepository;
         this.llamadas = llamadaRepository.findAll();
+        this.encuestas = encuestaRepository.findAll();
     }
 
     //Este método guarda las fechas que entran por parámetros como variables del gestor y a su vez llama al método
@@ -93,8 +97,9 @@ public class GestorEncuesta implements IAgregado {
 
     //Setea la variable LlamadaElegida del gestor y realiza la búsqueda de los datos de la Llamada y la Encuesta
     //y manda un mensaje a la Pantalla para que muestre los datos en la tabla
-    public void tomarSeleccionLlamada(Llamada llamadaElegida)
+    public void tomarSeleccionLlamada(Long idLlamadaElegida)
     {
+        Llamada llamadaElegida = llamadaRepository.findById(idLlamadaElegida).orElseThrow();
         this.llamadaSeleccionada = llamadaElegida;
         buscarDatosLlamada();
         buscarRespuestas();
@@ -131,7 +136,7 @@ public class GestorEncuesta implements IAgregado {
 
     public Encuesta buscarPreguntasDeEncuesta(List<RespuestaPosible> respuestas)
     {
-       /* for (Encuesta encuesta : encuesta)
+       /*for (Encuesta encuesta : encuesta)
         {
             if (encuesta.esEncuestaDeCliente(respuestas))
             {
@@ -142,9 +147,11 @@ public class GestorEncuesta implements IAgregado {
 
         iterador.primero();
         while (!iterador.haTerminado()){
+            System.out.println(iterador.actual().getId());
             Encuesta encuesta = iterador.actual();
-            if(encuesta.esEncuestaDeCliente(respuestas))
+            if(encuesta.esEncuestaDeCliente(respuestas)){
                 return encuesta;
+            }
             iterador.siguiente();
         }
         return null;
@@ -169,8 +176,6 @@ public class GestorEncuesta implements IAgregado {
     public Iterador crearIterador(List<Object> elementos) {
         if (!elementos.isEmpty()) {
             Class<?> tipoElemento = elementos.get(0).getClass();
-            System.out.println("Elementos en la lista: " + elementos);
-            System.out.println("Tipo de elemento: " + tipoElemento.getName());
 
             if (tipoElemento.equals(Llamada.class)) {
                 return new IteradorLlamadaImpl(elementos);

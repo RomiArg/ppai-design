@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class Encuesta implements IAgregado {
     // Métodos que son utilizados en la implementación del CU
     public boolean esEncuestaDeCliente(List<RespuestaPosible> respuestas)
     {
-        IteradorPreguntaImpl iterador = (IteradorPreguntaImpl) crearIterador(Collections.singletonList(preguntas));
+        IteradorPreguntaImpl iterador = (IteradorPreguntaImpl) crearIterador(new ArrayList<>(this.preguntas));
        /* for (Pregunta pregunta : preguntas)
         {
             if (!pregunta.esEncuestaDeCliente(respuestas))
@@ -60,8 +61,8 @@ public class Encuesta implements IAgregado {
         while (!iterador.haTerminado())
         {
             Pregunta pregunta = iterador.actual();
-            if (!iterador.cumpleFiltro(respuestas))
-            {return false;}
+            //if (!iterador.cumpleFiltro(respuestas))
+            //{return false;}
             iterador.siguiente();
         }
         return true;

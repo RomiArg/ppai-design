@@ -46,11 +46,12 @@ public class IteradorPreguntaImpl implements IteradorPregunta {
         this.filtros = filtros;
         for (dsi.entrega3.models.Pregunta pregunta : preguntas)
         {
+            System.out.println(pregunta.getPregunta());
             if (!pregunta.esEncuestaDeCliente(filtros))
             {
                 return false;
             }
         }
-        return false;
+        return true;
     }
 }

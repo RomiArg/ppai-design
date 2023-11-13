@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/ivr")
@@ -32,5 +34,25 @@ public class RestController {
         LocalDateTime fechaInicioDateTime = LocalDateTime.parse(fechaInicio + " 00:00:00", formatter);
         LocalDateTime fechaFinDateTime = LocalDateTime.parse(fechaFin + " 23:59:59", formatter);
         return ResponseEntity.ok(gestorEncuesta.tomarSeleccionFechasFiltros(fechaInicioDateTime, fechaFinDateTime));
+    }
+
+    @GetMapping("encuestas/{id}")
+    public ResponseEntity<List<String>> getLlamadas(
+            @PathVariable Long id) {
+        gestorEncuesta.tomarSeleccionLlamada(id);
+
+        // Obtener la descripción de la encuesta
+        String descripcionEncuesta = gestorEncuesta.getDescripcionEncuesta();
+
+        // Obtener las preguntas y respuestas
+        List<String> preguntasYRespuestas = gestorEncuesta.getPreguntasYRespuestas();
+
+        // Combinar la descripción y las preguntas/respuestas en una lista
+        List<String> response = new ArrayList<>();
+        response.add(descripcionEncuesta);
+        response.addAll(preguntasYRespuestas);
+
+        // Devolver la respuesta ResponseEntity
+        return ResponseEntity.ok(response);
     }
 }
