@@ -89,7 +89,7 @@ public class Llamada {
 
     public boolean tieneEncuestaRespondida()
     {
-        if (respuestasDeEncuesta != null)
+        if (respuestasDeEncuesta.size() > 0)
         {
             return true;
         }

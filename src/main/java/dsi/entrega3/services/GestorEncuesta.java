@@ -91,9 +91,11 @@ public class GestorEncuesta implements IAgregado {
         this.llamadaSeleccionada = llamadaElegida;
         buscarDatosLlamada();
         buscarRespuestas();
+        System.out.println(llamadaSeleccionada.getId());
         Encuesta encuesta = buscarPreguntasDeEncuesta(rtasSeleccionadas);
         this.descripcionEncuesta = encuesta.getDescripcion();
         this.preguntasYRespuestas = buscarDescripcionEncuestaYPreguntas(encuesta);
+        System.out.println(buscarDescripcionEncuestaYPreguntas(encuesta));
     }
 
     // Obtiene los datos de la Llamada guardada en el gestor y llama los métodos en la clase Llamada que necesita
@@ -141,9 +143,12 @@ public class GestorEncuesta implements IAgregado {
 
         for (Pregunta preg : enc.getPreguntas()) {
             for (RespuestaPosible res : rtasSeleccionadas) {
+                //PROBLEMAA
                 if (preg.getRespuestaPosibles().stream().anyMatch(resp -> resp.getId().equals(res.getId()))) {
                     encuestaArmada.add(preg.getPregunta());
+                    System.out.println("AAAAAAA"+preg.getPregunta());
                     encuestaArmada.add(res.getDescripcion());
+                    System.out.println("AAAAAAA"+res.getDescripcion());
                 }
             }
         }
