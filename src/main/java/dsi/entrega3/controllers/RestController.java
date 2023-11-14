@@ -13,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+// Hace la comunicacion con la pantalla que es otro proyecto aparte programada en JavaScript
 @org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/ivr")
 @CrossOrigin(origins = "http://localhost:3000")
@@ -24,6 +25,8 @@ public class RestController {
         this.gestorEncuesta = gestor;
     }
 
+    // Recibe las fechas como String del front y las formatea en LocalDateTime y llama
+    // al metodo tomar seleccion de fechas del gestor
     @GetMapping("encuestas/{fechaInicio}/{fechaFin}")
     public ResponseEntity<List<Llamada>> consultarEncuestas(
             @PathVariable String fechaInicio,

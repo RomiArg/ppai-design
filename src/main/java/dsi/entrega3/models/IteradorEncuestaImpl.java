@@ -10,6 +10,9 @@ public class IteradorEncuestaImpl implements IteradorEncuesta {
     private int posicionActual;
     private List<Encuesta> encuestas;
 
+
+    // Metodo new, crea el iterador en base a la lista que recibe, como recibe una lista de objetos pregunta si es una
+    // instancia de Encuesta y la va guardando en la lista de encuestas que debe recorrer
     public IteradorEncuestaImpl(List<Object> elementos) {
         this.encuestas = new ArrayList<>();
         for (Object elemento : elementos) {
