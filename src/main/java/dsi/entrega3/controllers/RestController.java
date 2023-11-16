@@ -35,6 +35,7 @@ public class RestController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         LocalDateTime fechaInicioDateTime = LocalDateTime.parse(fechaInicio + " 00:00:00", formatter);
         LocalDateTime fechaFinDateTime = LocalDateTime.parse(fechaFin + " 23:59:59", formatter);
+
         return ResponseEntity.ok(gestorEncuesta.tomarSeleccionFechasFiltros(fechaInicioDateTime, fechaFinDateTime));
     }
 
